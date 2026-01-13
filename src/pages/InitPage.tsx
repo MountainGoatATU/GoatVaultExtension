@@ -69,15 +69,16 @@ export default function InitPage() {
 
         try {
             const response: AuthInitResponse | null = await verifyEmail(email);
+
             if (response) {
                 // Navigate to login page and pass state
                 navigate("/login", { state: { response, rememberMe } });
             } else {
                 alert("Email not found or invalid.");
             }
-        } catch (err) {
-            console.error(err);
-            alert("Something went wrong. Please try again.");
+        } catch (err: any) {
+            console.error("Error verifying email:", err);
+            alert(`Something went wrong: ${err?.message || err}`);
         }
     };
 

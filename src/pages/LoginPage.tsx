@@ -57,11 +57,13 @@ const styles: Record<string, React.CSSProperties> = {
 export default function LoginPage() {
     const navigate = useNavigate();
     const location = useLocation();
-    const state = location.state as
-        | { initResponse: AuthInitResponse; rememberMe: boolean }
-        | undefined;
+    const { initResponse } = location.state as {
+    initResponse: AuthInitResponse;
+    rememberMe: boolean;
+    };
 
-    const initResponse = state?.initResponse;
+
+    alert(JSON.stringify(initResponse));
     //const rememberMe = state?.rememberMe ?? false;
 
     const [password, setPassword] = useState("");
@@ -86,7 +88,7 @@ export default function LoginPage() {
         try {
             const authVerifier = await generateAuthVerifier(
                 password,
-                initResponse.authSalt
+                initResponse.auth_salt
             );
 
             const response: AuthVerifyResponse = await login(initResponse._id, authVerifier);

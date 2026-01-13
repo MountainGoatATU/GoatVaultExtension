@@ -2,6 +2,9 @@
   "manifest_version": 3,
   "name": "GoatVaultExtension",
   "version": "1.0.0",
+  "host_permissions": [
+    "https://y9ok4f5yja.execute-api.eu-west-1.amazonaws.com/*"
+  ],
   "action": {
     "default_popup": "index.html"
   }

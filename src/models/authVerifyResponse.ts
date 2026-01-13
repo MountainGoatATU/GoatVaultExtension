@@ -1,7 +1,7 @@
 import type { VaultModel } from "./vault";
 
 export type AuthVerifyResponse = {
-    accessToken: string;
+    access_token: string;
     vault: VaultModel;
-    tokenType: string;
+    token_type: string;
 };

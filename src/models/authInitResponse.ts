@@ -1,5 +1,5 @@
 export type AuthInitResponse = {
     _id: string;
-    authSalt: string;
-    mfaEnabled: boolean;
+    auth_salt: string;
+    mfa_enabled: boolean;
 }
