@@ -48,10 +48,11 @@ export async function verifyEmail(email: string) {
 }
 
 export async function login(_id: string, auth_verifier: string) {
-  alert("Logging in with UserID: " + _id + " and AuthVerifier: " + auth_verifier); // For debugging purposes
+    const base64Id = uuidToBase64(_id);
+    alert("Base64 ID: " + base64Id); // For debugging purposes
     try {
         const response = await axios.post<AuthVerifyResponse>("https://y9ok4f5yja.execute-api.eu-west-1.amazonaws.com/v1/auth/verify", {
-           _id, 
+            _id: base64Id, 
            auth_verifier 
           }
         );
@@ -62,4 +63,15 @@ export async function login(_id: string, auth_verifier: string) {
         console.error("Error during login:", error);
         throw error;
     }
+}
+
+function uuidToBase64(uuid: string): string {
+  const hex = uuid.replace(/-/g, "");
+  const bytes = new Uint8Array(16);
+
+  for (let i = 0; i < 16; i++) {
+    bytes[i] = parseInt(hex.substring(i * 2, i * 2 + 2), 16);
+  }
+
+  return btoa(String.fromCharCode(...bytes));
 }
