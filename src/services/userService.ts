@@ -5,21 +5,26 @@ import { hash } from "argon2-wasm";
 
 export async function generateAuthVerifier(
   masterPassword: string,
-  authSalt: string
+  authSaltBase64: string
 ): Promise<string> {
-const saltBytes = Uint8Array.from(atob(authSalt), c => c.charCodeAt(0));
 
-    const result = await hash({
-        pass: masterPassword,
-        salt: saltBytes,
-        hashLen: 32,
-        time: 10,
-        mem: 32768,
-        parallelism: 5,
-        type: "id",
-    });
+  const salt = Uint8Array.from(
+    atob(authSaltBase64),
+    c => c.charCodeAt(0)
+  );
 
-  // hash.hash is a Uint8Array; convert to Base64
+  await new Promise(requestAnimationFrame);
+
+  const result = await hash({
+    pass: masterPassword,
+    salt,
+    hashLen: 32,
+    time: 10,
+    mem: 32768,
+    parallelism: 5,
+    type: "id", // Argon2id == C# DataIndependentAddressing
+  });
+
   return btoa(String.fromCharCode(...result.hash));
 }
 
@@ -42,10 +47,15 @@ export async function verifyEmail(email: string) {
   }
 }
 
-export async function login(userId: string, authVerifier: string) {
+export async function login(_id: string, auth_verifier: string) {
+  alert("Logging in with UserID: " + _id + " and AuthVerifier: " + auth_verifier); // For debugging purposes
     try {
-        const response = await axios.post<AuthVerifyResponse>("https://y9ok4f5yja.execute-api.eu-west-1.amazonaws.com/v1/auth/verify", { userId, authVerifier });
-        console.log("Login response:", response);
+        const response = await axios.post<AuthVerifyResponse>("https://y9ok4f5yja.execute-api.eu-west-1.amazonaws.com/v1/auth/verify", {
+           _id, 
+           auth_verifier 
+          }
+        );
+        alert("Login Response: " + JSON.stringify(response)); // For debugging purposes
         return response.data;
     }
     catch (error) {

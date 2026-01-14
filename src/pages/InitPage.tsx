@@ -58,8 +58,12 @@ const styles: Record<string, React.CSSProperties> = {
     },
 };
 
+type InitPageProps = {
+    setInitResponse: (data: AuthInitResponse) => void;
+};
 
-export default function InitPage() {
+
+export default function InitPage({ setInitResponse }: InitPageProps) {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
@@ -72,6 +76,7 @@ export default function InitPage() {
 
             if (response) {
                 // Navigate to login page and pass state
+                setInitResponse(response);
                 navigate("/login", { state: { response, rememberMe } });
             } else {
                 alert("Email not found or invalid.");

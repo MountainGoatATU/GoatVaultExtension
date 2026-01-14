@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import type { AuthInitResponse } from "../models/authInitResponse";
 import { generateAuthVerifier, login } from "../services/userService";
 import type { AuthVerifyResponse } from "../models/authVerifyResponse";
@@ -54,16 +54,13 @@ const styles: Record<string, React.CSSProperties> = {
     },
 };
 
-export default function LoginPage() {
+type LoginPageProps = {
+    initResponse: AuthInitResponse | null;
+};
+
+export default function LoginPage({ initResponse }: LoginPageProps) {
     const navigate = useNavigate();
-    const location = useLocation();
-    const { initResponse } = location.state as {
-    initResponse: AuthInitResponse;
-    rememberMe: boolean;
-    };
 
-
-    alert(JSON.stringify(initResponse));
     //const rememberMe = state?.rememberMe ?? false;
 
     const [password, setPassword] = useState("");
@@ -91,6 +88,8 @@ export default function LoginPage() {
                 initResponse.auth_salt
             );
 
+            alert("Generated Auth Verifier: " + authVerifier); // For debugging purposes
+
             const response: AuthVerifyResponse = await login(initResponse._id, authVerifier);
 
             if (response) {
@@ -100,7 +99,7 @@ export default function LoginPage() {
             }
         } catch (error) {
             console.error("Login error:", error);
-            alert("Login failed. Please try again.");
+            alert("Login failed. Please try again." + error);
             return;
         }
     };
