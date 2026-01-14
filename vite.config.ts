@@ -11,4 +11,15 @@ export default defineConfig({
     }),
   ],
   assetsInclude: ["**/*.wasm"],
+  resolve: {
+    alias: {
+      path: 'path-browserify',
+    },
+  },
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+  },
+  optimizeDeps: {
+    exclude: ['argon2-browser'],
+  },
 })
